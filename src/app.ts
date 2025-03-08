@@ -1,4 +1,4 @@
-import { Client, LocalAuth } from "whatsapp-web.js";
+import { Client, LocalAuth, Message } from "whatsapp-web.js";
 import qrcode from "qrcode-terminal";
 import commands from "./commands";
 
@@ -26,15 +26,32 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    qrcode.generate(qr, {small: true})
+    qrcode.generate(qr, { small: true });
 });
 
 client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-client.on('message', msg => {
-    for (const command of commands){
+client.on('message', async (msg) => {
+    // Check if message contains text 'share location, bro!'
+    if (msg.body.toLowerCase().trim() === "ga percaya, coba serlok") {
+        // Send location
+        await client.sendMessage(msg.from, "Tunggu bentar...");
+        
+        const latitude = -7.377534472633078;
+        const longitude = 108.23873367774264;
+        const location = `${latitude},${longitude}`;
+
+        const quotedMessageId = msg.id ? msg.id._serialized : undefined;
+        const googleMapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        await client.sendMessage(msg.from, `Nih lagi disini ${googleMapsLink}`, {
+            quotedMessageId
+        });
+        await client.sendMessage(msg.from, "gmna? percaya kann?");
+    }
+
+    for (const command of commands) {
         command.handle(msg);
     }
 });
