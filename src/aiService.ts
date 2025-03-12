@@ -7,7 +7,7 @@ import { romanticizeResponse, addEmojis } from "./responseUtils";
 dotenv.config();
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
-const MODEL = "mixtral-8x7b-32768";
+const MODEL = "llama3-8b-8192";
 
 export async function generateResponse(
     userMessage: string, 

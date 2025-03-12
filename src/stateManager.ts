@@ -1,5 +1,7 @@
 let currentStatus = "bekerja";
 let currentLocation = "di kantor";
+let botActive = true;
+let lastQuestionType = "";
 
 interface ConversationMemory {
     [phoneNumber: string]: string[];
@@ -22,6 +24,33 @@ export function updateLocation(location: string): void {
 
 export function getCurrentLocation(): string {
     return currentLocation;
+}
+
+export function setBotActive(): void {
+    botActive = true;
+    console.log("✅ Bot diaktifkan");
+}
+
+export function setBotInactive(): void {
+    botActive = false;
+    console.log("🔴 Bot dinonaktifkan");
+}
+
+export function getBotActiveStatus(): boolean {
+    return botActive;
+}
+
+export function addLastQuestion(type: string): void {
+    lastQuestionType = type;
+    console.log(`🔍 Jenis pertanyaan terakhir: ${type}`);
+}
+
+export function getLastQuestion(): string {
+    return lastQuestionType;
+}
+
+export function resetLastQuestion(): void {
+    lastQuestionType = "";
 }
 
 export function addToMemory(phoneNumber: string, message: string): void {
@@ -73,6 +102,8 @@ export function isCommand(message: string): boolean {
   return message.startsWith('/status') || 
          message.startsWith('/lokasi') || 
          message.startsWith('/reset') ||
+         message.startsWith('/stop') ||
+         message.startsWith('/run') ||
          message.startsWith('/bantuan');
 }
 
@@ -101,6 +132,8 @@ export function processCommand(command: string): string {
         /status [status] - Mengubah status saat ini
         /lokasi [lokasi] - Mengubah lokasi saat ini
         /reset - Kembali ke status default
+        /stop - Menonaktifkan bot (tidak membalas otomatis)
+        /run - Mengaktifkan bot kembali (membalas otomatis)
         /bantuan - Menampilkan bantuan ini`;
       
     default:
